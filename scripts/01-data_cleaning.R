@@ -1,8 +1,8 @@
 #### Preamble ####
-# Purpose: Clean the survey data downloaded from [...UPDATE ME!!!!!]
-# Author: Rohan Alexander [CHANGE THIS TO YOUR NAME!!!!]
-# Data: 3 January 2021
-# Contact: rohan.alexander@utoronto.ca [PROBABLY CHANGE THIS ALSO!!!!]
+# Purpose: Clean the survey data downloaded from Toronto Open Data Portal
+# Author: Ziyu Jiang
+# Data: 3 April 2022
+# Contact: ziyu.jiang@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: 
 # - Need to have downloaded the ACS data and saved it to inputs/data
@@ -13,20 +13,15 @@
 
 #### Workspace setup ####
 # Use R Projects, not setwd().
-library(haven)
 library(tidyverse)
 # Read in the raw data. 
-raw_data <- readr::read_csv("inputs/data/raw_data.csv"
-                     )
+raw_data <- read_csv("inputs/data/COVID19 cases.csv")
 # Just keep some variables that may be of interest (change 
 # this depending on your interests)
-names(raw_data)
-
 reduced_data <- 
   raw_data %>% 
   select(first_col, 
          second_col)
-rm(raw_data)
          
 
 #### What's next? ####
