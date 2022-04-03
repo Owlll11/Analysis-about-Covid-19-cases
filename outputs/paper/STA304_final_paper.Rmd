@@ -1,0 +1,40 @@
+---
+title: "Final paper"
+author: "Ziyu Jiang"
+date: "2022/4/3"
+output: pdf_document
+abstract: ""
+bibliography: myreferencelist.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(knitr)
+library(broom)
+```
+
+# Introduction
+
+# Data
+
+# Result
+
+# Discussion
+
+# References
+
+
+
+
+
+
+
+
+
+
