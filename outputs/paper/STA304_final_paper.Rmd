@@ -1,11 +1,16 @@
 ---
-title: "Final paper"
+title: Risk of mortality from infecting COVID-19 is age sensitive and is likely to
+  be gender sensitive
 author: "Ziyu Jiang"
 date: "2022/4/3"
-output: pdf_document
-abstract: ""
+output:
+  pdf_document:
+    toc: yes
+thanks: 'Code and data are available in this GitHub repository: [Owlll11/Analysis-about-Covid-19-cases](https://github.com/Owlll11/Analysis-about-Covid-19-cases).'
 bibliography: myreferencelist.bib
+abstract: 'This report presents an analysis of the City of Toronto’s data on the outcomes of the cases of infection of Toronto residents. The results indicate that patients’ age and gender affect their risk of mortality from infecting COVID-19. The analysis is conducted with logistic regression model created with the statistical programming language R. The results reinforce our understanding of the probable variables related to the consequencies of COVID-19 infections, which provides new probable ideas of preventing COVID-19 infections from the social perspective. \par \textbf {Keywords:} COVID-19, COVID-19 cases Toronto, COVID-19 risk of mortality, COVID-19 gender impacts, COVID-19 age impacts, toronto residents, open data toronto'
 ---
+\pagebreak
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -17,15 +22,63 @@ library(ggplot2)
 library(car)
 library(knitr)
 library(broom)
+library(dplyr)
+library(janitor)
 ```
 
-# Introduction
+```{r, include=FALSE}
+data <- read_csv("COVID19 cases.csv")
+```
 
-# Data
+```{r, include=FALSE}
+cleaned_data <- data %>% clean_names()
+cleaned_data <- cleaned_data %>% drop_na() %>%
+  mutate(symptom_levels = case_when(ever_hospitalized == "No" & ever_in_icu == "No" & ever_intubated == "No" ~ "1", 
+                                    ever_hospitalized == "Yes" & ever_in_icu == "No" & ever_intubated == "No" ~ "2", 
+                                    ever_hospitalized == "Yes" & ever_in_icu == "Yes" & ever_intubated == "No" ~ "3", 
+                                    ever_hospitalized == "Yes" & ever_in_icu == "Yes" & ever_intubated == "Yes" ~ "4")) %>%
+  mutate(outcome_res = case_when(outcome == "FATAL" ~ "1",
+                                 outcome == "RESOLVED" | outcome == "ACTIVE" ~ "0")) %>% 
+  mutate(date_diff = case_when(episode_date == reported_date ~ "0",
+                               episode_date != reported_date ~ "1")) %>%
+  select(-c(id, assigned_id, fsa, classification, currently_hospitalized,
+            currently_in_icu, outbreak_associated, 
+            currently_intubated, ever_hospitalized, ever_in_icu,
+            ever_intubated, episode_date, reported_date))
+```
 
-# Result
+```{r, include=FALSE}
+# Create the initial model and check the vif for the variables
+model1 <- glm(as.factor(outcome_res) ~ as.factor(age_group) +
+                as.factor(client_gender) +
+                as.factor(symptom_levels) + as.factor(date_diff), 
+              family = binomial, data = cleaned_data)
+vif(model1)
+```
 
-# Discussion
+```{r, include=FALSE}
+summary(model1)
+```
+
+
+# 1 Introduction
+
+During the two years of COVID-19 pandemic, people are getting more and more worried about the consequences of infecting COVID-19. It was being said that the COVID-19 pandemic cases happened on children with a markedly low proportion than people in other age groups [@article1]. At the same time, it was said that there are increased number of cases and higher risk of severe disease for people with higher ages for infecting COVID-19 [@article1]. These suggests that people with higher age should pay more attention on preventing COVID-19 infection. Now a similar question has occurred after the conclusion of age sensitive for COVID-19: Would COVID-19 also be gender sensitive? Gender-related factors may cause differences for an individual’s likelihood of exposure to COVID-19, but they may also influence whether an individual tries to acquire a test and whether they are given one [@article2]. Analyzing this topic would help people have some ideas about society impacts on COVID-19 infection while they tried to have prevention from it. 
+
+After analyzing the data in the certain period of time, we can see that the patients' age and gender would have some effects on the symptoms and final results from infecting COVID-19. In this report, we will use the COVID-19 Cases in Toronto data from Toronto Open Data Portal [@opendatatoronto] to investigate the relationship between the final results of infecting COVID-19 and other independent variables, such as age and gender. We will discuss the limitation of the data and the potential bias from the data, apply the logistic regression model on the data. At last, we will discuss the distributions of the independent variables in interests, the resulting influences of the final model, the weakness of our researching processes and the lessons learned from the research and the possible improvement in future.
+
+R statistical programming language[@r] is used for analyzing, and the package `tidyverse`[@tidyverse] is used for data visualizing and data manipulating in this project. The package `broom`[@broom] is also used in this project to convert the statistical objects into tidy tibbles, the package `knitr`[@knitr] is used to knit the R markdown file to pdf form and ro create the tables,and the package `ggplot2`[@ggplot2] is used for creating graphs. The packages `dplyr`[@dplyr] and `janitor`[@janitor] are used to proceed the data cleaning processes. Finally, the package `car`[@car] is used to creating regression models of the variables.
+
+
+# 2 Data
+
+# 3 Methodology
+
+# 4 Result
+
+# 5 Discussion
+
+\pagebreak
 
 # References
 
