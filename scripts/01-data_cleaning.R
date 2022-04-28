@@ -20,8 +20,7 @@ raw_data <- read_csv("inputs/data/COVID19 cases.csv")
 # this depending on your interests)
 reduced_data <- 
   raw_data %>% 
-  select(first_col, 
-         second_col)
+  select(1,2)
          
 
 #### What's next? ####
